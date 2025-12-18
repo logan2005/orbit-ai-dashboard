@@ -2,13 +2,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Zap, Bell, ShieldCheck, ArrowLeft, Sun, Droplets, ScanFace, Sparkles, Terminal } from 'lucide-react';
 import { SolarPanel } from './components/dashboard/SolarPanel';
 import { EnergyGrid } from './components/dashboard/EnergyGrid';
-import { WaterTank } from './components/dashboard/WaterTank';
 import { SecurityMatrix, CleanlinessTracker } from './components/dashboard/VisionSystems';
 import { AlertLog } from './components/dashboard/AlertLog';
-import { SolarData, RoomStatus, WaterSystem, AlertLog as AlertLogType, TransparencyEvent, BuildingStats, SecurityFeed } from './types';
+import { SolarData, RoomStatus, AlertLog as AlertLogType, TransparencyEvent, BuildingStats, SecurityFeed } from './types';
 import { Card } from './components/ui/Card';
 import { SystemTransparency } from './components/dashboard/SystemTransparency';
-import { SolarReport, EnergyReport, SecurityReport, CleanlinessReport, WaterReport } from './components/dashboard/ModuleReports';
+import { SolarReport, EnergyReport, SecurityReport, CleanlinessReport } from './components/dashboard/ModuleReports';
 
 // --- MOCK DATA ---
 const generateMockData = () => {
@@ -91,22 +90,10 @@ const generateMockData = () => {
 };
 
 const App: React.FC = () => {
-  const [activeView, setActiveView] = useState<'DASHBOARD' | 'SOLAR' | 'ENERGY' | 'WATER' | 'SECURITY' | 'CLEANLINESS' | 'LOGS'>('DASHBOARD');
+  const [activeView, setActiveView] = useState<'DASHBOARD' | 'SOLAR' | 'ENERGY' | 'SECURITY' | 'CLEANLINESS' | 'LOGS'>('DASHBOARD');
   const [time, setTime] = useState(new Date());
   const [data, setData] = useState(generateMockData());
   
-  // Initialize multi-tank water data
-  const [waterData, setWaterData] = useState<WaterSystem>({
-      totalFlowRate: 125,
-      systemPressure: 45,
-      tanks: [
-          { id: 't1', buildingName: 'Admin Block', capacity: 5000, level: 85, inflow: 0, outflow: 12, pumpStatus: 'OFF', isLeaking: false, quality: { ph: 7.1, turbidity: 0.2 } },
-          { id: 't2', buildingName: 'Academic Block', capacity: 10000, level: 45, inflow: 80, outflow: 45, pumpStatus: 'ON', isLeaking: false, quality: { ph: 7.2, turbidity: 0.3 } },
-          { id: 't3', buildingName: 'Lab Complex', capacity: 8000, level: 92, inflow: 0, outflow: 5, pumpStatus: 'OFF', isLeaking: false, quality: { ph: 6.9, turbidity: 0.5 } },
-          { id: 't4', buildingName: 'Dormitories', capacity: 15000, level: 60, inflow: 120, outflow: 150, pumpStatus: 'ON', isLeaking: false, quality: { ph: 7.0, turbidity: 0.4 } },
-      ]
-  });
-
   const [securityFeeds, setSecurityFeeds] = useState<SecurityFeed[]>([
       { 
           id: '01', location: 'Classroom 3B', type: 'CLASSROOM', status: 'SAFE', 
@@ -147,7 +134,6 @@ const App: React.FC = () => {
       { id: '1', timestamp: '10:42 AM', category: 'SOLAR', message: 'Load shifted to solar grid.', severity: 'low' },
       { id: '2', timestamp: '10:30 AM', category: 'ENERGY', message: 'Room 103: Empty with AC On. Auto-shutdown initiated.', severity: 'medium' },
       { id: '3', timestamp: '09:15 AM', category: 'CLEANLINESS', message: 'Task generated: Corridor B Spill.', severity: 'low' },
-      { id: '4', timestamp: '08:45 AM', category: 'WATER', message: 'Tank 2 Full. Motor auto-stop.', severity: 'low' },
   ]);
 
   const [transparencyLogs, setTransparencyLogs] = useState<TransparencyEvent[]>([
@@ -240,52 +226,9 @@ const App: React.FC = () => {
           return { ...prev, rooms: newRooms, solarData: newSolar };
       });
       
-      // Update Water Data
-      setWaterData(prev => {
-          const newTanks = prev.tanks.map(t => {
-              // Simulate usage and filling
-              let newLevel = t.level;
-              if (t.pumpStatus === 'ON') newLevel += 1;
-              if (t.outflow > 0) newLevel -= 0.5;
-              newLevel = Math.max(0, Math.min(100, newLevel));
-
-              // Logic to toggle pumps based on level
-              let newPump = t.pumpStatus;
-              if (t.pumpStatus !== 'MAINTENANCE') {
-                  if (newLevel < 30) newPump = 'ON';
-                  if (newLevel > 95) newPump = 'OFF';
-              }
-
-              // Random Leak Event
-              let isLeaking = t.isLeaking;
-              if (Math.random() > 0.98) isLeaking = true;
-              if (isLeaking && Math.random() > 0.9) isLeaking = false; // Fixed
-
-              // Random Maintenance
-              if (Math.random() > 0.995) newPump = 'MAINTENANCE';
-              if (t.pumpStatus === 'MAINTENANCE' && Math.random() > 0.9) newPump = 'OFF';
-
-              return { 
-                  ...t, 
-                  level: newLevel, 
-                  pumpStatus: newPump,
-                  isLeaking: isLeaking,
-                  // Vary flow rates slightly
-                  inflow: newPump === 'ON' ? 80 + Math.random() * 20 : 0,
-                  outflow: 10 + Math.random() * 40
-              };
-          });
-
-          return {
-              ...prev,
-              tanks: newTanks,
-              totalFlowRate: newTanks.reduce((acc, t) => acc + t.outflow, 0)
-          };
-      });
-
       // Simulate Transparency Logs
       if (Math.random() > 0.7) {
-          const modules = ['SOLAR', 'ENERGY', 'WATER', 'SECURITY'];
+          const modules = ['SOLAR', 'ENERGY', 'SECURITY'];
           const actions = ['Scanning...', 'Optimizing...', 'Analyzing Pattern...', 'Syncing DB...'];
           const mod = modules[Math.floor(Math.random() * modules.length)];
           const newLog: TransparencyEvent = {
@@ -324,17 +267,6 @@ const App: React.FC = () => {
             </div>
             <div className="flex-1 min-h-[300px]">
               <EnergyReport rooms={data.rooms} />
-            </div>
-          </div>
-        );
-      case 'WATER':
-        return (
-          <div className="flex flex-col gap-6 h-full">
-            <div className="h-[45vh]">
-               <WaterTank tanks={waterData.tanks} />
-            </div>
-            <div className="flex-1">
-               <WaterReport system={waterData} />
             </div>
           </div>
         );
@@ -479,21 +411,6 @@ const App: React.FC = () => {
                     <span className="text-orbit-cyan text-sm font-bold bg-orbit-cyan/10 px-2 py-1 rounded border border-orbit-cyan/20">SAVED</span>
                   </div>
                   <p className="text-sm text-gray-400">2 Rooms Auto-Shutdown</p>
-                </div>
-              </Card>
-
-              <Card 
-                onClick={() => setActiveView('WATER')}
-                title="Water Resources" 
-                icon={<Droplets className="w-6 h-6" />}
-                className="hover:shadow-blue-500/20"
-              >
-                <div className="mt-4 flex flex-col gap-2 h-32 justify-end">
-                  <div className="flex justify-between items-end">
-                    <span className="text-4xl font-mono font-bold text-white">78<span className="text-sm text-gray-500 ml-1">%</span></span>
-                    <span className="text-blue-400 text-sm font-bold bg-blue-500/10 px-2 py-1 rounded border border-blue-500/20">FLOWING</span>
-                  </div>
-                  <p className="text-sm text-gray-400">No Leaks Detected</p>
                 </div>
               </Card>
 

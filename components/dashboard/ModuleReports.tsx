@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, Badge } from '../ui/Card';
-import { SolarData, RoomStatus, WaterSystem, BuildingStats, WaterTankData, SecurityFeed } from '../../types';
+import { SolarData, RoomStatus, BuildingStats, SecurityFeed } from '../../types';
 import { ArrowUpRight, ArrowDownRight, User, AlertTriangle, CheckCircle, Clock, DollarSign, PieChart, Building, Zap, Plug, Droplets, Activity, Beaker, Settings, ShieldAlert, UserX, Siren, UserCheck, MapPin, Phone, ClipboardList } from 'lucide-react';
 import { ResponsiveContainer, PieChart as RePieChart, Pie, Cell, Tooltip, Legend, BarChart, Bar, XAxis, YAxis } from 'recharts';
 
@@ -248,116 +248,6 @@ export const EnergyReport: React.FC<{ rooms: RoomStatus[] }> = ({ rooms }) => {
                             })}
                         </tbody>
                     </table>
-                </div>
-            </div>
-        </Card>
-    );
-};
-
-export const WaterReport: React.FC<{ system: WaterSystem }> = ({ system }) => {
-    const totalCapacity = system.tanks.reduce((acc, t) => acc + t.capacity, 0);
-    const currentTotal = system.tanks.reduce((acc, t) => acc + (t.capacity * (t.level/100)), 0);
-    const overallLevel = (currentTotal / totalCapacity) * 100;
-    
-    // Data for bar chart
-    const barData = system.tanks.map(t => ({
-        name: t.buildingName.split(' ')[0], // Short name
-        usage: t.outflow,
-        inflow: t.inflow
-    }));
-
-    return (
-        <Card title="Flow Analytics & Quality" className="h-full overflow-y-auto">
-            {/* Top Metrics */}
-             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                <div className="p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl flex items-center justify-between">
-                    <div>
-                        <p className="text-xs text-blue-400 uppercase font-bold tracking-wider">Total Reserves</p>
-                        <p className="text-xl font-mono font-bold text-white mt-1">{(currentTotal/1000).toFixed(1)} <span className="text-xs text-gray-400">kL</span></p>
-                        <div className="w-full bg-gray-700 h-1 mt-2 rounded-full overflow-hidden">
-                            <div className="h-full bg-blue-500" style={{ width: `${overallLevel}%` }}></div>
-                        </div>
-                    </div>
-                    <div className="p-3 bg-blue-500/20 rounded-full">
-                        <Droplets className="w-6 h-6 text-blue-400" />
-                    </div>
-                </div>
-
-                <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-xl flex items-center justify-between">
-                    <div>
-                        <p className="text-xs text-emerald-400 uppercase font-bold tracking-wider">Active Flow Rate</p>
-                        <p className="text-xl font-mono font-bold text-white mt-1">{system.totalFlowRate.toFixed(1)} <span className="text-xs text-gray-400">L/m</span></p>
-                        <p className="text-[10px] text-gray-400">Across all sectors</p>
-                    </div>
-                    <div className="p-3 bg-emerald-500/20 rounded-full">
-                        <Activity className="w-6 h-6 text-emerald-400" />
-                    </div>
-                </div>
-
-                <div className="p-4 bg-purple-500/10 border border-purple-500/20 rounded-xl flex items-center justify-between">
-                     <div>
-                        <p className="text-xs text-purple-400 uppercase font-bold tracking-wider">Water Quality</p>
-                        <div className="flex gap-3 mt-1">
-                            <div>
-                                <span className="text-[10px] text-gray-400 block">pH</span>
-                                <span className="font-mono font-bold text-white">7.2</span>
-                            </div>
-                            <div>
-                                <span className="text-[10px] text-gray-400 block">Turbidity</span>
-                                <span className="font-mono font-bold text-white">0.4</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="p-3 bg-purple-500/20 rounded-full">
-                        <Beaker className="w-6 h-6 text-purple-400" />
-                    </div>
-                </div>
-            </div>
-
-            <div className="flex flex-col md:flex-row gap-6">
-                {/* Chart */}
-                <div className="flex-1 h-48 bg-black/20 rounded-xl border border-white/5 p-4">
-                     <h3 className="text-xs font-bold text-gray-400 uppercase mb-2">Real-time Inflow vs Usage</h3>
-                     <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={barData}>
-                            <XAxis dataKey="name" stroke="#64748b" fontSize={10} tickLine={false} axisLine={false} />
-                            <YAxis stroke="#64748b" fontSize={10} tickLine={false} axisLine={false} />
-                            <Tooltip cursor={{fill: 'rgba(255,255,255,0.05)'}} contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '8px', fontSize: '12px' }} />
-                            <Legend iconSize={8} wrapperStyle={{ fontSize: '10px' }} />
-                            <Bar dataKey="inflow" name="Pump Inflow" fill="#10b981" radius={[4, 4, 0, 0]} barSize={20} />
-                            <Bar dataKey="usage" name="Usage Outflow" fill="#3b82f6" radius={[4, 4, 0, 0]} barSize={20} />
-                        </BarChart>
-                     </ResponsiveContainer>
-                </div>
-                
-                {/* Alert List */}
-                <div className="w-full md:w-1/3">
-                    <h3 className="text-xs font-bold text-gray-400 uppercase mb-3">System Anomalies</h3>
-                    <div className="space-y-2">
-                        {system.tanks.filter(t => t.isLeaking).map(t => (
-                            <div key={t.id} className="p-3 bg-rose-950/20 border border-rose-500/30 rounded-lg flex items-center gap-3">
-                                <AlertTriangle className="w-4 h-4 text-rose-500" />
-                                <div>
-                                    <p className="text-sm font-bold text-rose-400">Leak Detected</p>
-                                    <p className="text-[10px] text-gray-400">{t.buildingName} Tank</p>
-                                </div>
-                            </div>
-                        ))}
-                        {system.tanks.filter(t => t.pumpStatus === 'MAINTENANCE').map(t => (
-                             <div key={t.id} className="p-3 bg-amber-950/20 border border-amber-500/30 rounded-lg flex items-center gap-3">
-                                <Settings className="w-4 h-4 text-amber-500" />
-                                <div>
-                                    <p className="text-sm font-bold text-amber-400">Manual Override</p>
-                                    <p className="text-[10px] text-gray-400">{t.buildingName} - Maintenance</p>
-                                </div>
-                            </div>
-                        ))}
-                        {!system.tanks.some(t => t.isLeaking || t.pumpStatus === 'MAINTENANCE') && (
-                            <div className="p-4 text-center text-xs text-gray-500 italic border border-white/5 rounded-lg">
-                                No active anomalies detected.
-                            </div>
-                        )}
-                    </div>
                 </div>
             </div>
         </Card>

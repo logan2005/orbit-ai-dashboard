@@ -32,29 +32,8 @@ export interface RoomStatus {
   camFeed?: string; // URL for mock feed
 }
 
-export interface WaterTankData {
-  id: string;
-  buildingName: string;
-  level: number; // percentage 0-100
-  capacity: number; // Liters
-  inflow: number; // L/min (Pump rate)
-  outflow: number; // L/min (Usage)
-  pumpStatus: 'ON' | 'OFF' | 'MAINTENANCE';
-  isLeaking: boolean;
-  quality: {
-    ph: number;
-    turbidity: number; // NTU
-  };
-}
-
-export interface WaterSystem {
-  tanks: WaterTankData[];
-  totalFlowRate: number;
-  systemPressure: number; // psi
-}
-
 export interface SecurityFeed {
-  id: string;
+  id:string;
   location: string;
   type: 'CLASSROOM' | 'CORRIDOR' | 'COMMON_AREA';
   status: 'SAFE' | 'WARNING' | 'CRITICAL';
@@ -68,7 +47,7 @@ export interface SecurityFeed {
 export interface AlertLog {
   id: string;
   timestamp: string;
-  category: 'SOLAR' | 'ENERGY' | 'WATER' | 'SECURITY' | 'CLEANLINESS';
+  category: 'SOLAR' | 'ENERGY' | 'SECURITY' | 'CLEANLINESS';
   message: string;
   severity: 'low' | 'medium' | 'high';
 }
