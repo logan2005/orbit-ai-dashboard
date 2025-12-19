@@ -5,7 +5,7 @@ import { SecurityFeed } from '../../types';
 
 export const SecurityMatrix: React.FC<{ feeds: SecurityFeed[] }> = ({ feeds }) => {
   return (
-    <Card title="Campus Surveillance Grid" icon={<Eye className="w-5 h-5" />} className="h-full">
+    <Card title="Infra Surveillance Grid" icon={<Eye className="w-5 h-5" />} className="h-full">
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 h-full overflow-y-auto custom-scrollbar p-2">
         {feeds.map((feed) => (
           <div 
@@ -138,14 +138,14 @@ interface CleanlinessZoneData {
 
 const TrashPreview: React.FC<{ zone: CleanlinessZoneData }> = ({ zone }) => {
     return (
-        <div className={`relative rounded-xl overflow-hidden border bg-black/40 group transition-all duration-300 ${
+        <div className={`relative rounded-xl overflow-hidden border bg-black/40 group transition-all duration-300 aspect-video min-h-[250px] ${
             zone.status === 'CRITICAL' ? 'border-rose-500/60 shadow-[0_0_15px_rgba(244,63,94,0.2)]' :
             zone.status === 'PENDING' ? 'border-amber-500/60' :
             zone.status === 'SCANNING' ? 'border-orbit-cyan/60' :
             'border-emerald-500/30'
         }`}>
             {/* Image */}
-            <div className="absolute inset-0">
+            <div className="absolute inset-0 w-full h-full">
                 <img src={zone.image} alt={zone.name} className="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity duration-500" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-black/60"></div>
             </div>
@@ -259,7 +259,7 @@ export const CleanlinessTracker: React.FC = () => {
 
     return (
         <Card title="Hygiene AI Vision" icon={<Sparkles className="w-5 h-5" />} className="h-full">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-full p-2 overflow-y-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-2 overflow-y-auto">
                 {zones.map((zone, i) => (
                     <TrashPreview key={i} zone={zone} />
                 ))}

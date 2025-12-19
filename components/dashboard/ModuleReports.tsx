@@ -10,8 +10,8 @@ export const SolarReport: React.FC<{ data: SolarData[]; buildings: BuildingStats
     const totalLoad = totalGen + totalGrid;
     const solarPercentage = (totalGen / totalLoad) * 100;
     
-    // Mock currency calculation (e.g., $0.15 per kWh)
-    const savedAmount = totalGen * 0.15;
+    // Mock currency calculation (e.g., ₹8 per kWh - Indian rate)
+    const savedAmount = totalGen * 8;
 
     return (
         <Card title="Generation & Efficiency Report" className="h-full overflow-y-auto">
@@ -20,7 +20,7 @@ export const SolarReport: React.FC<{ data: SolarData[]; buildings: BuildingStats
                 <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-xl flex items-center justify-between">
                     <div>
                         <p className="text-xs text-emerald-400 uppercase font-bold tracking-wider">Estimated Savings</p>
-                        <p className="text-2xl font-mono font-bold text-white mt-1">${savedAmount.toFixed(2)}</p>
+                        <p className="text-2xl font-mono font-bold text-white mt-1">₹{savedAmount.toFixed(2)}</p>
                         <p className="text-[10px] text-gray-400">Today's offset value</p>
                     </div>
                     <div className="p-3 bg-emerald-500/20 rounded-full">

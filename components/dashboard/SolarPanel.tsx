@@ -12,7 +12,7 @@ export const SolarPanel: React.FC<SolarPanelProps> = ({ data }) => {
   const latest = data[data.length - 1];
   
   return (
-    <Card title="Solar Intelligence" icon={<Sun className="w-5 h-5" />} className="h-full">
+    <Card title="Energy Intelligence" icon={<Sun className="w-5 h-5" />} className="h-full">
       <div className="grid grid-cols-4 gap-4 mb-4">
         <div className="bg-black/20 p-3 rounded-lg border border-white/5">
           <p className="text-gray-400 text-[10px] uppercase mb-1">Solar Generation</p>

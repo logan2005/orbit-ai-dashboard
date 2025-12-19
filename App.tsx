@@ -319,7 +319,7 @@ const App: React.FC = () => {
             </div>
             <div>
                 <h1 className="text-xl font-bold tracking-tight text-white">ORBIT AI</h1>
-                <p className="text-[10px] text-orbit-cyan uppercase tracking-widest font-mono">Campus Intelligence System</p>
+                <p className="text-[10px] text-orbit-cyan uppercase tracking-widest font-mono">Infra Intelligence System</p>
             </div>
         </div>
 
@@ -384,9 +384,9 @@ const App: React.FC = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <Card 
+              <Card
                 onClick={() => setActiveView('SOLAR')}
-                title="Solar Intelligence" 
+                title="Energy Intelligence" 
                 icon={<Sun className="w-6 h-6" />}
                 className="hover:shadow-orbit-amber/20"
               >
@@ -414,9 +414,9 @@ const App: React.FC = () => {
                 </div>
               </Card>
 
-              <Card 
+              <Card
                 onClick={() => setActiveView('SECURITY')}
-                title="Student Monitoring System" 
+                title="Manpower Management System" 
                 icon={<ScanFace className="w-6 h-6" />}
                 className="hover:shadow-rose-500/20"
               >

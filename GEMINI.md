@@ -1,13 +1,13 @@
-# Project: Orbit AI - Smart Campus Dashboard
+# Project: Orbit AI - Smart Infra Dashboard
 
 ## Project Overview
 
-This project is a React-based frontend application for **Orbit AI**, a "Smart Campus" intelligence system. It provides a dashboard for visualizing and managing various aspects of a campus, including:
+This project is a React-based frontend application for **Orbit AI**, a "Smart Infra" intelligence system. It provides a dashboard for visualizing and managing various aspects of an Infra, including:
 
-*   **Solar Intelligence:** Monitoring solar power generation and grid usage.
+*   **Energy Intelligence:** Monitoring solar power generation and grid usage.
 *   **Energy Matrix:** Tracking energy consumption in different rooms and identifying wastage.
 *   **Water Resources:** Monitoring water tank levels, flow rates, and potential leaks.
-*   **Student Monitoring System:** Real-time security monitoring of different zones.
+*   **Manpower Management System:** Real-time security monitoring of different zones.
 *   **Hygiene AI:** Tracking cleanliness status.
 *   **System Logs:** A log of all automated system events and alerts.
 

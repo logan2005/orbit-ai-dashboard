@@ -1,6 +1,6 @@
 {
   "name": "Orbit AI",
-  "description": "A cinematic, intelligent campus management dashboard monitoring solar, energy, water, and security in real-time.",
+  "description": "A cinematic, intelligent Infra management dashboard monitoring solar, energy, water, and security in real-time.",
   "requestFramePermissions": [
     "camera"
   ]

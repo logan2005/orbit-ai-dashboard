@@ -52,7 +52,7 @@ export interface AlertLog {
   severity: 'low' | 'medium' | 'high';
 }
 
-export interface CampusStats {
+export interface InfraStats {
   gridDependency: number; // percentage
   energySaved: number; // kWh
   activeAlerts: number;
